@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Law With Luminous | Nigerian Law, Simply Explained</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1B3A5E;
+            --navy-dark: #0F2035;
+            --yellow: #FDB913;
+            --yellow-glow: rgba(253, 185, 19, 0.3);
+            --white: #FFFFFF;
+            --gray: #94A3B8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--navy-dark);
+            color: var(--white);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+        }
+
+        /* --- BACKGROUND EFFECTS --- */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow-1 {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, var(--yellow-glow) 0%, transparent 70%);
+            filter: blur(100px);
+            animation: pulse 8s infinite alternate;
+        }
+
+        .glow-2 {
+            position: absolute;
+            bottom: -10%;
+            right: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            filter: blur(100px);
+            animation: pulse 12s infinite alternate-reverse;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 0.8; }
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            position: relative;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo span {
+            color: var(--yellow);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--yellow);
+        }
+
+        .btn-auth {
+            background: var(--yellow);
+            color: var(--navy-dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px var(--yellow-glow);
+        }
+
+        .btn-auth:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--yellow-glow);
+        }
+
+        /* --- HERO --- */
+        .hero {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .badge {
+            background: rgba(253, 185, 19, 0.1);
+            color: var(--yellow);
+            padding: 0.5rem 1.2rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(253, 185, 19, 0.2);
+            display: inline-block;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(90deg, var(--yellow), #FFF0D1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        /* --- SEARCH BAR --- */
+        .search-container {
+            position: relative;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 10px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1.2rem 1.5rem;
+            color: white;
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .search-container input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .btn-search {
+            background: var(--white);
+            color: var(--navy-dark);
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-search:hover {
+            background: var(--yellow);
+            transform: scale(1.02);
+        }
+
+        /* --- TOPICS SECTION --- */
+        .topics {
+            padding: 6rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 3rem 2rem;
+            border-radius: 32px;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--yellow);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4), 0 0 20px var(--yellow-glow);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(253, 185, 19, 0.1);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: var(--yellow);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-link {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--yellow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: 0.3s;
+        }
+
+        .card:hover .card-link {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 3rem; }
+            .nav-links { display: none; }
+            .hero { padding-top: 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow">
+        <div class="glow-1"></div>
+        <div class="glow-2"></div>
+    </div>
+
+    <nav>
+        <div class="logo">
+            <span>LAW</span> WITH LUMINOUS
+        </div>
+        <div class="nav-links">
+            <a href="#">Topics</a>
+            <a href="#">Legal Dictionary</a>
+            <a href="#">News</a>
+            <a href="#">About</a>
+        </div>
+        <a href="#" class="btn-auth">Sign In</a>
+    </nav>
+
+    <header class="hero">
+        <div class="badge">🌟 Lighting the path for 200 Million Nigerians</div>
+        <h1>Nigerian Law, <br><span>Simply Explained.</span></h1>
+        <p>Understand your rights in plain English, Pidgin, Yoruba, Igbo, or Hausa. No jargon. No confusion. Just clarity for every Nigerian.</p>
+        
+        <div class="search-container">
+            <input type="text" placeholder="Ask any legal question... (e.g. 'police arrest rights')">
+            <button class="btn-search">Search</button>
+        </div>
+    </header>
+
+    <section class="topics">
+        <div class="section-header">
+            <div>
+                <h2>Essential Guides</h2>
+                <p style="color: var(--gray)">Select a category to begin your journey</p>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <div class="card-icon">🏠</div>
+                <h3>Landlord & Tenant</h3>
+                <p>Understand rent issues, eviction notices, and your rights as a Nigerian tenant or landlord.</p>
+                <div class="card-link">View Guide →</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">⚖️</div>
+                <h3>Police & Arrest</h3>
+                <p>Know what to do when stopped by the police. Rights during arrest, bail, and legal representation.</p>
+                <div class="card-link">View Guide →</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💍</div>
+                <h3>Marriage & Family</h3>
+                <p>Simplified guides on traditional, registry, and religious marriages in Nigeria, and child custody.</p>
+                <div class="card-link">View Guide →</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">💼</div>
+                <h3>Labor & Work</h3>
+                <p>Employment contracts, unlawful dismissal, and the minimum wage laws explained for everyone.</p>
+                <div class="card-link">View Guide →</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">🛒</div>
+                <h3>Consumer Rights</h3>
+                <p>Dealing with bad products, EEDC/NEPA overbilling, and your rights in the Nigerian marketplace.</p>
+                <div class="card-link">View Guide →</div>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">📜</div>
+                <h3>The Constitution</h3>
+                <p>The foundation of your rights. Basic fundamental human rights explained in simple terms.</p>
+                <div class="card-link">View Guide →</div>
+            </div>
+        </div>
+    </section>
+
+    <footer style="padding: 4rem 5%; text-align: center; color: var(--gray); font-size: 0.9rem; border-top: 1px solid var(--glass-border); margin-top: 4rem;">
+        &copy; 2026 Law With Luminous. Empowering Nigerians with Legal Clarity.
+    </footer>
+
+</body>
+</html>

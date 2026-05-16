@@ -1,0 +1,35 @@
+# =============================================
+# WHAT TO IGNORE IN GIT
+# =============================================
+
+# Environment files — NEVER commit these!
+.env
+.env.local
+.env.production
+
+# Python virtual environment
+backend-python/venv/
+
+# Node dependencies
+backend-node/node_modules/
+frontend/node_modules/
+
+# SQLite database (data lives here — back it up separately)
+backend-node/database.sqlite
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Vite build output
+frontend/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Large Binaries & Portable Environment
+node_portable/
+node_portable.zip
+.gemini/
