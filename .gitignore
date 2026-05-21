@@ -33,3 +33,6 @@ Thumbs.db
 node_portable/
 node_portable.zip
 .gemini/
+
+.vercel
+.env*.local

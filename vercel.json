@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend-node/server.js",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "backend-python/app.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/node/(.*)",
+      "dest": "backend-node/server.js"
+    },
+    {
+      "src": "/api/python/(.*)",
+      "dest": "backend-python/app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
+  ]
+}

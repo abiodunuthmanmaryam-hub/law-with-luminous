@@ -9,23 +9,12 @@ import google.generativeai as genai
 
 load_dotenv()
 
-# Configure Gemini using the legacy google-generativeai SDK matching your current code
+# Configure Gemini
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
     genai.configure(api_key=api_key)
-    
-    # Injecting the permanent Domain-Specific System Instructions into the model initialization
-    model = genai.GenerativeModel(
-        model_name='gemini-1.5-flash',
-        system_instruction=(
-            "You are 'Luminous', a specialized, domain-specific legal AI assistant expert "
-            "in Nigerian National Law (Statutory, Constitutional, and Civil Law) AND Sharia Law "
-            "(Islamic jurisprudence). Your purpose is to handle user queries, explain complex jargon, "
-            "and analyze legal issues. When analyzing cases, look at the problems through both lenses "
-            "if relevant, providing a clear, objective comparison between National Law and Sharia Law "
-            "regarding family law, marriage, inheritance, property, and contracts."
-        )
-    )
+    # Using gemini-1.5-flash for speed and reliability
+    model = genai.GenerativeModel('gemini-1.5-flash')
 else:
     model = None
     print("⚠️ WARNING: GEMINI_API_KEY not found in .env")
@@ -40,11 +29,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Upgraded schema to accept the choice from your frontend selector
 class SearchQuery(BaseModel):
     query: str
     language: str = "en"
-    law_type: str = "Compare Both"  # Options from frontend: "National Law", "Sharia Law", "Compare Both"
 
 # Database path resolution
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -89,30 +76,24 @@ def ai_legal_search(search: SearchQuery):
             
         ai_summary = "I found some legal information that might help you."
         
-        # Even if database results are empty, let the live AI generate a response using its training data!
-        if model:
-            context = ""
-            if results:
-                context = "\n".join([f"Article: {r['title']}\nSummary: {r['simple_version']}\nRights: {r['your_rights']}" for r in results])
-            else:
-                context = "No specific local database articles matched. Rely on your core training data."
+        if model and results:
+            context = "\n".join([f"Article: {r['title']}\nSummary: {r['simple_version']}\nRights: {r['your_rights']}" for r in results])
             
-            # Dynamic prompt built around their legal category choice
+            # Refined prompt for Nigerian context
             prompt = f"""
-            The user wants to analyze this issue specifically through: {search.law_type}
-            User Query: '{search.query}'
+            You are 'Luminous', a friendly and expert Nigerian AI Legal Assistant. 
+            The user is asking: '{search.query}'
             
-            Provide a clear, comforting, and structured overview matching their requested focus.
+            Based on the following articles from our Nigerian Legal Database, provide a very short, comforting, and clear summary in {search.language}.
             
             Rules:
             1. Use plain language (no complex jargon).
             2. If language is 'pcm' (Pidgin), use natural Nigerian Pidgin.
-            3. If the focus is 'Compare Both', provide a clear side-by-side view of National Law vs. Sharia Law.
-            4. Be empowering but remind them this is not official legal advice from a lawyer.
-            5. Focus on what they SHOULD DO next.
-            6. Keep it concise, engaging, and professional.
+            3. Be empowering but remind them this is not official legal advice from a lawyer.
+            4. Focus on what they SHOULD DO next.
+            5. Keep it under 100 words.
             
-            Local Database Context:
+            Articles:
             {context}
             """
             
