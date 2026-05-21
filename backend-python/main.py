@@ -5,29 +5,18 @@ import sqlite3
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 load_dotenv()
 
-# Configure Gemini using the legacy google-generativeai SDK matching your current code
+# Initialize the modern GenAI Client.
+# It automatically reads GEMINI_API_KEY from your environment variables.
 api_key = os.getenv("GEMINI_API_KEY")
 if api_key:
-    genai.configure(api_key=api_key)
-    
-    # Injecting the permanent Domain-Specific System Instructions into the model initialization
-    model = genai.GenerativeModel(
-        model_name='gemini-1.5-flash',
-        system_instruction=(
-            "You are 'Luminous', a specialized, domain-specific legal AI assistant expert "
-            "in Nigerian National Law (Statutory, Constitutional, and Civil Law) AND Sharia Law "
-            "(Islamic jurisprudence). Your purpose is to handle user queries, explain complex jargon, "
-            "and analyze legal issues. When analyzing cases, look at the problems through both lenses "
-            "if relevant, providing a clear, objective comparison between National Law and Sharia Law "
-            "regarding family law, marriage, inheritance, property, and contracts."
-        )
-    )
+    client = genai.Client()
 else:
-    model = None
+    client = None
     print("⚠️ WARNING: GEMINI_API_KEY not found in .env")
 
 app = FastAPI(title="Law With Luminous - Legal Brain API")
@@ -49,6 +38,16 @@ class SearchQuery(BaseModel):
 # Database path resolution
 BASE_DIR = Path(__file__).resolve().parent.parent
 DB_PATH = BASE_DIR / "backend-node" / "database.sqlite"
+
+# Define the permanent Domain-Specific System Instructions
+SYSTEM_INSTRUCTION = (
+    "You are 'Luminous', a specialized, domain-specific legal AI assistant expert "
+    "in Nigerian National Law (Statutory, Constitutional, and Civil Law) AND Sharia Law "
+    "(Islamic jurisprudence). Your purpose is to handle user queries, explain complex jargon, "
+    "and analyze legal issues. When analyzing cases, look at the problems through both lenses "
+    "if relevant, providing a clear, objective comparison between National Law and Sharia Law "
+    "regarding family law, marriage, inheritance, property, and contracts."
+)
 
 @app.get("/")
 def read_root():
@@ -90,7 +89,7 @@ def ai_legal_search(search: SearchQuery):
         ai_summary = "I found some legal information that might help you."
         
         # Even if database results are empty, let the live AI generate a response using its training data!
-        if model:
+        if client:
             context = ""
             if results:
                 context = "\n".join([f"Article: {r['title']}\nSummary: {r['simple_version']}\nRights: {r['your_rights']}" for r in results])
@@ -117,7 +116,15 @@ def ai_legal_search(search: SearchQuery):
             """
             
             try:
-                response = model.generate_content(prompt)
+                # Updated content generation structure matching the google-genai package
+                response = client.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction=SYSTEM_INSTRUCTION,
+                        temperature=0.3
+                    )
+                )
                 ai_summary = response.text.strip()
             except Exception as ai_err:
                 print(f"Gemini AI Error: {ai_err}")
